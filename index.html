@@ -105,10 +105,19 @@
       return next(action)
     }
 
+    const logger = (store) => (next) => (action) => {
+      console.group(action.type)
+        console.log('The action: ', action)
+        const result = next(action)
+        console.log('The new state: ', store.getState())
+      console.groupEnd()
+      return result
+    }
+
     const store = Redux.createStore(Redux.combineReducers({
       todos,
       goals
-    }), Redux.applyMiddleware(checker))
+    }), Redux.applyMiddleware(checker, logger))
 
     // subscribe is used to listen for changes.
     // execute the callback func passed into subscribe when state changes.
