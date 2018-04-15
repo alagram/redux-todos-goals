@@ -93,7 +93,7 @@
       }
     }
 
-    function checkandDispatch(store, action) {
+    const checker = (store) => (next) => (action) => {
       if (action.type === ADD_TODO && action.todo.name.toLowerCase().includes('bitcoin')) {
         return alert("Nope. That's a bad idea.")
       }
@@ -102,13 +102,13 @@
         return alert("Nope. That's a bad idea.")
       }
 
-      return store.dispatch(action)
+      return next(action)
     }
 
     const store = Redux.createStore(Redux.combineReducers({
       todos,
       goals
-    }))
+    }), Redux.applyMiddleware(checker))
 
     // subscribe is used to listen for changes.
     // execute the callback func passed into subscribe when state changes.
@@ -130,7 +130,7 @@
       const name = input.value
       input.value = ''
 
-      checkandDispatch(store, addTodoAction({
+      store.dispatch(addTodoAction({
         name,
         complete: false,
         id: generateId()
@@ -142,7 +142,7 @@
       const name = input.value
       input.value = ''
 
-      checkandDispatch(store, addGoalAction({
+      store.dispatch(addGoalAction({
         id: generateId(),
         name
       }))
@@ -167,14 +167,14 @@
       const text = document.createTextNode(todo.name)
 
       const removeBtn = createRemoveButton(() => {
-        checkandDispatch(store, removeTodoAction(todo.id))
+        store.dispatch(removeTodoAction(todo.id))
       })
 
       node.appendChild(text)
       node.appendChild(removeBtn)
       node.style.textDecoration = todo.complete ? 'line-through' : 'none'
       node.addEventListener('click', () => {
-        checkandDispatch(store, toggleTodoAction(todo.id))
+        store.dispatch(toggleTodoAction(todo.id))
       })
 
 
@@ -187,7 +187,7 @@
       const text = document.createTextNode(goal.name)
 
       const removeBtn = createRemoveButton(() => {
-        checkandDispatch(store, removeGoalAction(goal.id))
+        store.dispatch(removeGoalAction(goal.id))
       })
 
       node.appendChild(text)
