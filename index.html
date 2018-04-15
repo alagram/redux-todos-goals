@@ -7,7 +7,7 @@
 <body>
   <div>
     <h1>Todo List</h1>
-    <input id='todo' type='text' placeholder='Add Todo'>
+    <input id='todo' type='text' placeholder='Add Todo' />
     <button id='todoBtn'>Add Todo</button>
     <ul id='todos'></ul>
   </div>
@@ -98,6 +98,9 @@
       goals
     }))
 
+    // subscribe is used to listen for changes.
+    // execute the callback func passed into subscribe when state changes.
+    // This happens after calling dispatch
     store.subscribe(() => {
 
       const { goals, todos } = store.getState()
